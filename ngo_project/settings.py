@@ -182,7 +182,3 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
-     
-# client_id_google = 266129980789-vmn9ajokg80p9e8m465v7r1761m5kp5n.apps.googleusercontent.com
-
-# client_secret = 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
