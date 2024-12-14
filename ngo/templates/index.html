@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block content %}
+
+<a href="{% url 'donate' %}" id="donate-button">
+  Donate Now
+</a>
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
   {% for message in messages %}
       <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">

@@ -1,56 +1,19 @@
-{% extends 'base/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+{% load tailwind_filters %}
+</head>
+<body>
+    <h1>Login to Your Account</h1>
+    <form method="post" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit">Login</button>
+    </form>
 
-
-{% load widget_tweaks %}
-
-{% load socialaccount %}
-
-
-{% block content %}
-
-<div class="container justify-content-center min-vh-100 align-items-center">
-
-
-<form>
-    <div class="form-group py-2">
-      <label for="exampleInputEmail1">Email address</label>
-      {% render_field form.login class="form-control"%}
-      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-    </div>
-    <div class="form-group">
-      <label for="exampleInputPassword1">Password</label>
-      {% render_field form.password class="form-control"%}
-    </div>
-    <div class="form-check">
-      {% render_field form.remember class="form-check-input" %}
-      <label class="form-check-label" for="exampleCheck1">Remember Me</label>
-
-    </div>
-    <div class="py-2">
-        <button type="submit" class="btn btn-primary">Login</button>
-
-    </div>
-
-
-    <a href="{% url 'account_reset_password' %}">Forget Password </a>
-    
-    <br/>
-    <hr/>
-    <div class="justify-content-center">
-    <a href="{% provider_login_url 'google' %}">Login with Google</a>
-    <div>
-
-    
-  </form>
-
-
-
-</div>
-
-
-
-{% endblock content %}
-
-
-
-
+</body>
+</html>

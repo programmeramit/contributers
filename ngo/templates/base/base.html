@@ -23,6 +23,38 @@
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+    <style>
+      /* Floating Button Style */
+      #donate-button {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background-color: #ff4500;
+          color: white;
+          padding: 15px 25px;
+          border-radius: 50px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+          font-size: 16px;
+          font-weight: bold;
+          text-decoration: none;
+          z-index: 1000;
+          transition: transform 0.2s, background-color 0.3s;
+      }
+
+      #donate-button:hover {
+          background-color: #e63e00;
+          transform: scale(1.1);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 600px) {
+          #donate-button {
+              font-size: 14px;
+              padding: 10px 20px;
+          }
+      }
+  </style>
+
   </head>
 
   <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
@@ -48,7 +80,7 @@
               <div class="col-md-6 text-md-left pl-0">
                 <a href="#" class=" pr-3 pl-0">Home</a>
                 <a href="#" class="p-3">Events</a>
-                <a href="#" class="p-3">Become A Volunteer</a>
+                <a href="{% url 'group' %}" class="p-3">Become A Volunteer</a>
               </div>
               <div class="col-md-6 text-md-right">
                 <a href="#" class="p-3"><span class="icon-twitter"></span></a>
@@ -67,10 +99,7 @@
                 <a href="index.html" class="text-white">Fundraiser</a>
               </div>
               
-              {% if request.user.username %}
-              <a href="accounts/logout">logout</a>
-              
-              {% endif %}
+             
     
     
               <nav class="site-navigation text-left ml-auto " role="navigation">
@@ -78,8 +107,19 @@
                   <li class="active"><a href="{% url 'home' %}" class="nav-link">Home</a></li>
                   <li><a href="about/" class="nav-link">About Us</a></li>
                   <li><a href="causes.html" class="nav-link">Our Causes</a></li>
-                  <li><a href="accounts/" class="nav-link">Login</a></li>
-                  <li><a href="{% url 'admin_login' %}" class="nav-link">Admin</a></li>
+                  <li><a href="admin/" class="nav-link">Admin Portal</a></li>
+                  <li>
+                    {% if request.user.username %}
+                    <a href="accounts/logout" class=" btn  btn-danger p-2 text-white">logout</a>
+                    
+                    {% else %}
+                    <li><a href="accounts/" class="nav-link">Login</a></li>
+                    <li><a href="{% url 'group' %}" class="nav-link">Become Volunteer</a></li>
+
+                    {% endif %}
+
+
+                  </li>
                 </ul>
               </nav>
     

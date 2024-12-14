@@ -15,13 +15,13 @@ from django.db.models import Sum
 from django.core.paginator import Paginator
 
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from django.contrib.auth import login
-from .forms import SetUsernameAndPasswordForm
+from .forms import SetUsernameAndPasswordForm,UserForm
 from django.contrib import messages
 
 
-from .models import Donation
+from .models import Donation,PendingGroupRequest
 # Create your views here.
 
 
@@ -82,94 +82,34 @@ def donate(request):
 def payment_success(request,pay_id):
 
         # Update donation statu
-        messages.success(request, "Your action was successful!")
+        messages.success(request, "Your payemnt is successful was successful!")
 
         return redirect('home')
 
 
 
-def admin_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            if user.is_staff:  # Ensures only staff/admin users can log in
-                login(request, user)
-                return redirect('admin_dashboard')  # Redirect to the dashboard
-            else:
-                messages.error(request, "You are not authorized to access this page.")
-        else:
-            messages.error(request, "Invalid username or password.")
-    return render(request, 'login.html')
-
-@login_required
-def admin_dashboard(request):
-    if not request.user.is_staff:
-        return redirect('admin_login')
-    
-    total_users = User.objects.count()
-    users = User.objects.all()
-
-
-    # Set how many users to display per page
-    paginator = Paginator(users, 2)  # Show 10 users per page
-
-    # Get the current page number from the request
-    page_number = request.GET.get('page')
-    
-    # Get the users for the current page
-    page_obj = paginator.get_page(page_number)
-
-    total_donations = Donation.objects.aggregate(total_amount=Sum('amount'))
-    total_amount = total_donations['total_amount'] or 0
-    return render(request, 'admin.html',{'total_amount': total_amount,"users_total":total_users,"users":users,'page_obj': page_obj})
-
-@login_required
-def admin_dashboard_donations(request):
-    if not request.user.is_staff:
-        return redirect('admin_login')
-    
-  
-
-    donations = Donation.objects.all()
-
-    paginator = Paginator(donations, 10)  # Show 10 donations per page
-
-    # Get the current page number from the request
-    page_number = request.GET.get('page')
-
-    # Get the donations for the current page
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'donations.html',{'page_obj': page_obj})
 
 
 
-def admin_logout(request):
-    logout(request)
-    return redirect('admin_login')
 
-def set_username_and_password(request):
+def request_group_membership(request):
     if request.method == "POST":
-        form = SetUsernameAndPasswordForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = request.user
+            form.save()
+        
+            subject = "Thank You for Registration for Volunteer"
+            message = f"Dear f{request.POST.get('name')},\n\nThank for showing interset in our volunteer group we will provide.\n \n We will notify you through email after you application reviewed by our team \n \n Thank you"
+            email = EmailMessage(
+                subject,
+                message,
+                'kamit896837@gmail.com',  # Sender email
+                [request.POST.get("email")],         # Recipient email
+                 )
 
-            # Check if the username is already taken
-            if User.objects.filter(username=username).exists():
-                form.add_error('username', 'This username is already taken.')
-            else:
-                user.username = username
-                user.set_password(password)  # Save password securely
-                user.save()
-
-                # Re-login the user since the password has changed
-                login(request, user)
-                return redirect('home')  # Redirect to your desired page
-    else:
-        form = SetUsernameAndPasswordForm()
-    
-    return render(request, 'set_username_and_password.html', {'form': form})
+            email.send()
+            messages.success(request,"You have successfully registered for our Volunter.Our Team will verify your detail")
+            return redirect('home')
+    form = UserForm()
+    return render(request, "request_group.html", {"groups": form})
 

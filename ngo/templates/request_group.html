@@ -1,0 +1,12 @@
+<script src="https://cdn.tailwindcss.com"></script>
+{% load tailwind_filters %}
+<div class="flex justify-center bg-slate-100 h-full">
+<form method="post" class="w-full md:mx-32 mx-8">
+    <h1 class="text-green-500 py-8 text-3xl font-bold">Become a Volunter for our Foundation</h1>
+    
+    {% csrf_token %}
+   {{groups|crispy}}
+   <p class="text-red-500 my-2"><span class="font-bold">*Note*:-</span>We will notify you as Volunter after review your apllication</p>
+   <button type="submit" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Submit</button>
+</form>
+</div>
